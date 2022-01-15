@@ -7,3 +7,13 @@ services:
       - '1883:1883'                                                                                                                                                                           
     # volumes:
     #   - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+  influxdb:
+    image: influxdb:1.8
+    volumes:
+    - ./influxdb-storage:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_ADMIN_USER=root
+      - INFLUXDB_ADMIN_PASSWORD=pass
+    ports:
+      - "8086:8086"

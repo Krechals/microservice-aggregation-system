@@ -1,6 +1,9 @@
 import paho.mqtt.client as mqtt
+import json
+from datetime import datetime
+from pytz import timezone
 
-TOPIC = "sprc/chat/andrei_tudor.topala"
+TOPIC = "UPB/RPi_1"
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
@@ -10,9 +13,20 @@ def broker_publish():
 
     client.connect("localhost")
     client.loop_start()
-    while True:
-        msg = input()
-        client.publish(TOPIC, msg, qos=2, retain=True)
+    tz = timezone('Europe/Bucharest')
+
+    msg = {
+        'BAT': 99,
+        'HUMID': 40,
+        'TMP': 25.3,
+        'PRJ': 'SPRC',
+        'status': 'OK',
+        'timestamp': datetime.now(tz).strftime('%Y-%m-%dT%H:%M:%S%z')
+    }
+    client.publish(TOPIC, json.dumps(msg), qos=2, retain=True)
+
+    client.loop_stop()
+    client.disconnect()
 
 if __name__ == "__main__":
 	broker_publish()
