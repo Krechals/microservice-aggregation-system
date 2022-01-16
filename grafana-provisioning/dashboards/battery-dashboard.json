@@ -22,7 +22,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -38,7 +38,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 8,
+            "fillOpacity": 5,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -46,11 +46,8 @@
               "viz": false
             },
             "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
             "lineWidth": 2,
-            "pointSize": 10,
+            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -82,7 +79,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 11,
         "w": 24,
         "x": 0,
         "y": 0
@@ -109,16 +106,15 @@
             },
             {
               "params": [
-                "previous"
+                "none"
               ],
               "type": "fill"
             }
           ],
-          "hide": false,
-          "measurement": "RPi_1.TMP",
+          "measurement": "RPi_1.BAT",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(\"value\") FROM /^*.*/  WHERE (\"location\" = 'UPB') AND $timeFilter GROUP BY time(1s) fill(previous)",
+          "query": "SELECT mean(\"value\") FROM /^*.BAT*/ WHERE $timeFilter GROUP BY time(1s) fill(none)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -136,16 +132,10 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "location",
-              "operator": "=",
-              "value": "UPB"
-            }
-          ]
+          "tags": []
         }
       ],
-      "title": "Grafic Date",
+      "title": "Evolutia Incarcarii Bateriilor",
       "type": "timeseries"
     },
     {
@@ -153,12 +143,11 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "fixed"
+            "mode": "thresholds"
           },
           "custom": {
             "align": "center",
-            "displayMode": "auto",
-            "filterable": false
+            "displayMode": "auto"
           },
           "mappings": [],
           "thresholds": {
@@ -173,21 +162,20 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "string"
+          }
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "id": 4,
       "options": {
-        "frameIndex": 0,
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "8.2.6",
       "targets": [
@@ -201,7 +189,7 @@
             },
             {
               "params": [
-                "none"
+                "null"
               ],
               "type": "fill"
             }
@@ -209,7 +197,7 @@
           "measurement": "RPi_1.BAT",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(\"value\") FROM /^*.*/  WHERE (\"location\" = 'UPB') AND $timeFilter GROUP BY time(1s) fill(none)",
+          "query": "SELECT mean(\"value\") FROM /^*.BAT*/ WHERE $timeFilter GROUP BY time(1s) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -227,32 +215,28 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "location",
-              "operator": "=",
-              "value": "UPB"
-            }
-          ]
+          "tags": []
         }
       ],
-      "title": "Tabel",
+      "title": "Statistic Aggregation",
       "transformations": [
         {
-          "id": "calculateField",
+          "id": "reduce",
           "options": {
-            "mode": "binary",
-            "reduce": {
-              "reducer": "allValues"
-            },
-            "replaceFields": false
+            "labelsToFields": false,
+            "reducers": [
+              "lastNotNull",
+              "min",
+              "max",
+              "mean"
+            ]
           }
         }
       ],
       "type": "table"
     }
   ],
-  "refresh": "30s",
+  "refresh": "30m",
   "schemaVersion": 32,
   "style": "dark",
   "tags": [],
@@ -260,12 +244,12 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "UPB IoT Data",
-  "uid": "-4Ojof1nk",
-  "version": 8
+  "title": "Battery Dashboard",
+  "uid": "nGa3qfJnz",
+  "version": 5
 }

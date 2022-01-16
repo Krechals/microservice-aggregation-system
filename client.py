@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from pytz import timezone
 
-TOPIC = "UPB/RPi_1"
+TOPIC = "UPB/Mongo"
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
@@ -16,9 +16,9 @@ def broker_publish():
     tz = timezone('Europe/Bucharest')
 
     msg = {
-        'BAT': 99,
-        'HUMID': 40,
-        'TMP': 25.3,
+        'BAT': 80,
+        'HUMID': 45,
+        'TMP': 27.3,
         'PRJ': 'SPRC',
         'status': 'OK',
         'timestamp': datetime.now(tz).strftime('%Y-%m-%dT%H:%M:%S%z')
