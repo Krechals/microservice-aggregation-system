@@ -29,27 +29,35 @@ def is_float(nr):
 
 # Callback from messaging broker when connecting.
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    if os.getenv('DEBUG_DATA_FLOW') and os.environ['DEBUG_DATA_FLOW'] == True:
+        logging.info(f'Connected with result code {str(rc)}.')
     client.subscribe("#")
 
 # Callback from messaging broker when someone publish on any topic.
 def on_message(client, userdata, msg):
     host_param = msg.topic.split('/')
+
+    if len(host_param) is not 2:
+        logging.info(f'Received data on inconsistent topic: {msg.topic}')
+        return
     location = host_param[0]
     station = host_param[1] 
     
     json_obj = json.loads(msg.payload)
-    if os.getenv('DEBUG_DATA_FLOW'):
+    if os.getenv('DEBUG_DATA_FLOW') and os.environ['DEBUG_DATA_FLOW'] == True:
         logging.info(f'Received a message by topic [{msg.topic}]')
         if 'timestamp' in json_obj:
             logging.info(f'Data timestamp is: {json_obj["timestamp"]}')
         else:
             logging.info('Data timestamp is NOW')
+    
+    if 'timestamp' not in json_obj:
+        json_obj['timestamp'] = datetime.now(timezone('Europe/Bucharest')).strftime('%Y-%m-%dT%H:%M:%S%z')
 
     db_elems = []
     for key, value in json_obj.items():
         if is_int(value) or is_float(value):
-            if os.getenv('DEBUG_DATA_FLOW'):
+            if os.getenv('DEBUG_DATA_FLOW') and os.environ['DEBUG_DATA_FLOW'] == True:
                 logging.info(f'{msg.topic}.{key} {value}')
             db_elems.append({
                 'measurement': f'{station}.{key}',
@@ -59,7 +67,7 @@ def on_message(client, userdata, msg):
                 },
                 'time': json_obj['timestamp'],
                 'fields': {
-                    'value': value
+                    'value': float(value)
                 }
             })
 
