@@ -2,6 +2,8 @@ version: '3.5'
 
 services:
   adaptor:
+    image: adaptor
+    container_name: adaptor
     build: ./adaptor
     restart: always
     command: python3 -u aggregator.py
@@ -42,7 +44,7 @@ services:
   grafana:
     image: grafana/grafana:8.2.6
     ports:
-      - 80:3000
+      - '80:3000'
     environment:
       - GF_SECURITY_ADMIN_USER=asistent
       - GF_SECURITY_ADMIN_PASSWORD=grafanaSPRC2021
