@@ -18,13 +18,11 @@ services:
 
   broker:
     image: eclipse-mosquitto:1.6
-    hostname: broker-container                                                                    
+    hostname: broker-container
     ports:
       - '1883:1883'
     networks:
-      - adaptor-broker                                                                                                                                                                     
-    # volumes:
-    #   - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - adaptor-broker
 
   influxdb:
     image: influxdb:1.8
@@ -57,7 +55,6 @@ services:
       - grafana-db
 
 volumes:
-  grafana-storage: {}
   influxdb-storage: {}
 
 networks:
