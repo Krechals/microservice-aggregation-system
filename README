@@ -5,13 +5,16 @@ Grupa: 341 C3
 
 ====================
 1) BUILD
-- Pentru a rula serviciul folositi comanda:
+- Inainte de a porni serviciul, setati variabila de mediu `SPRC_DVP`:
+> `export SPRC_DVP=/var/lib/docker/volumes`
+- Pentru a porni serviciul folositi comanda:
 > `run.sh`
 Fisierul run creaza imaginea Docker pentru adaptor si porneste toate nourile.
 
 2) TEST
 - De indata ce toate nodurile pornesc (`docker node ps`), puteti genera input:
 > `test.sh`
+- Scriptul asteapta dupa pornirea interfetei grafice Grafana.
 
 ====================
 3) ADAPTOR
@@ -20,7 +23,7 @@ in baza de date
 
 - Cand `DEBUG_DATA_FLOW=true`, componenta va genera message de logging.
 Pentru a vizualiza mesagele de logging, folositi comanda:
-> `docker service logs -f sprc3_grafana`
+> `docker service logs -f sprc3_adaptor`
 
 - Daca datele primite de pe un topic al broker-ului nu contin timestamp, 
 adaptorul va adauga datelor un timestamp local inainte de a le insera 
@@ -55,7 +58,7 @@ unui fisier de pe masina host.
 6) Grafana
 - Grafana este conectata doar la TSDB pentru a afisa datele.
 
-- ***Pornirea instantei de Grafana dureaza 4-5 minute!***
+- Pornirea instantei de Grafana dureaza 4-5 minute!
 
 - Dashboard-urile au fost create din interfata grafica si au 
 fost exportate prin format JSON. Fisierele de configurare ale 
@@ -65,6 +68,7 @@ dashboard-urilor au fost adaugate in `grafana-provisioning/dashboards/`
 `SELECT mean("value") FROM /^*.*/  WHERE ("location" = 'UPB') AND $timeFilter GROUP BY time(1s) fill(none)`
 
 - Query de preluare a datelor din TSDB pentru dashboard Battery:
+`SELECT mean("value") FROM /^*.BAT*/ WHERE $timeFilter GROUP BY time(1s) fill(null)`
 
 - Conectarea InfluxDB la Grafana a realizata in linia de comanda. 
 Configuratiile au fost preluate din `http://localhost:80/api/datasources` si au fost folosite 
